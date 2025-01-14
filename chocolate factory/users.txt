@@ -1,0 +1,4 @@
+BibaBoba;Lenojka2013;ADMIN
+boba;boba1234;CUSTOMER
+Pupa;12345;ADMIN
+Lupa;12345;CUSTOMER
