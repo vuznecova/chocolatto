@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileStorage {
-    private static final String USERS_FILE = "users1.txt";
-    private static final String ORDERS_FILE = "orders1.txt";
+    private static final String USERS_FILE = "users.txt";
+    private static final String ORDERS_FILE = "orders.txt";
 
     // ======= Работа с пользователями =======
 
