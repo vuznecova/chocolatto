@@ -1,3 +1,8 @@
 Молочный шоколад;5.0;/images/Milk.png
 Тёмный шоколад;6.0;/images/dark_choko.png
 Cake;13.0;/images/Cupcake.png
+Kinder Bueno;4.0;/images/bueno.png
+Maffin;2.0;/images/Maffin.png
+White chocolate;3.0;/images/White.png
+Oreo chocolate;4.0;/images/Oreo.png
+Lindt Dark chocolate;5.0;/images/Lindt.png

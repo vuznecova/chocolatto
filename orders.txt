@@ -1,1 +1,1 @@
-Pupa;2025-01-15T22:34:14.1213306;NEW;fgerg, egraer, gaerg, 213
+Pupa;2025-01-15T22:34:14.1213306;COMPLETED;fgerg, egraer, gaerg, 213

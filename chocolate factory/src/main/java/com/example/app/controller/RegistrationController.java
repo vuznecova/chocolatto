@@ -27,7 +27,7 @@ public class RegistrationController {
     public RegistrationController() {
 
         // 1. Создаём корневой StackPane с задним фоном
-        rootPane = ViewUtils.createStackPaneWithBackground("/images/background.jpg");
+        rootPane = ViewUtils.createStackPaneWithBackground("/images/background1.jpg");
 
         // 2. Создаём VBox, центрируем
         regBox = ViewUtils.createVBoxCenter(15, 15);

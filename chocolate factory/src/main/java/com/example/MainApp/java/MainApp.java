@@ -36,7 +36,7 @@ public class MainApp extends Application {
 
         // Инициализируем контроллер логина
         LoginController loginController = new LoginController();
-        Scene scene = new Scene(loginController.getView(), 800, 600);
+        Scene scene = new Scene(loginController.getView(), 1200, 800);
 
         primaryStage.setTitle("Chocolate Factory App");
         primaryStage.setScene(scene);

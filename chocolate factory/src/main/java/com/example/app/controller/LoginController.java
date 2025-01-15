@@ -38,7 +38,7 @@ public class LoginController {
         // Устанавливаем фоновую картинку (предположим, лежит в resources/images/background.jpg)
         // Убедитесь, что файл действительно есть в папке resources/images.
         BackgroundImage bgImage = new BackgroundImage(
-                new Image(getClass().getResource("/images/background.jpg").toExternalForm()),
+                new Image(getClass().getResource("/images/background2.jpg").toExternalForm()),
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
