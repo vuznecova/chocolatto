@@ -40,8 +40,6 @@ public class MainApp extends Application {
 
         primaryStage.setTitle("Chocolate Factory App");
         primaryStage.setScene(scene);
-        primaryStage.setFullScreenExitHint("");
-        primaryStage.setFullScreen(true);
         primaryStage.show();
     }
 
