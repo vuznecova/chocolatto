@@ -2,6 +2,7 @@ package com.example.MainApp.java;
 
 import com.example.app.controller.LoginController;
 import com.example.app.service.OrderService;
+import com.example.app.service.ProductService;
 import com.example.app.service.UserService;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -21,14 +22,21 @@ public class MainApp extends Application {
         return orderService;
     }
 
+    private static ProductService productService;
+
+    public static ProductService getProductService() {
+        return productService;
+    }
+
     @Override
     public void start(Stage primaryStage) {
         userService = new UserService();
         orderService = new OrderService();
+        productService = new ProductService();
 
         // Инициализируем контроллер логина
         LoginController loginController = new LoginController();
-        Scene scene = new Scene(loginController.getView(), 400, 200);
+        Scene scene = new Scene(loginController.getView(), 800, 600);
 
         primaryStage.setTitle("Chocolate Factory App");
         primaryStage.setScene(scene);

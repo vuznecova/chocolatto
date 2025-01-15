@@ -15,11 +15,12 @@ public class OrderService {
     }
 
     // Создание нового заказа
-    public void createOrder(String userLogin) {
-        Order newOrder = new Order(userLogin, LocalDateTime.now(), OrderStatus.NEW);
+    public void createOrder(String userLogin, String address) {
+        Order newOrder = new Order(userLogin, LocalDateTime.now(), OrderStatus.NEW, address);
         orders.add(newOrder);
-        FileStorage.saveOrders(orders);
+        FileStorage.saveOrders(orders); // если вы храните заказы в файле
     }
+
 
     // Получить заказы конкретного пользователя
     public List<Order> getOrdersByUser(String userLogin) {
@@ -36,6 +37,12 @@ public class OrderService {
     public List<Order> getAllOrders() {
         return new ArrayList<>(orders);
     }
+
+    public void removeOrder(Order order) {
+        orders.remove(order);
+        FileStorage.saveOrders(orders); // если вы храните заказы в файле
+    }
+
 
     // Изменить статус заказа
     public void changeOrderStatus(Order order, OrderStatus newStatus) {
