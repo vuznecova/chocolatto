@@ -5,6 +5,7 @@ import com.example.app.model.Order;
 import com.example.app.model.OrderStatus;
 import com.example.app.model.Product;
 import com.example.app.utils.ViewUtils;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -50,7 +51,7 @@ public class AdminController {
         ordersLeftBox.getChildren().addAll(header, ordersArea);
 
         // ПРАВАЯ ЧАСТЬ (Vbox): кнопки и поля
-        VBox ordersRightBox = new VBox(10);
+        VBox ordersRightBox = new VBox(15);
 
         Button refreshOrdersBtn = new Button("Обновить заказы");
         refreshOrdersBtn.setOnAction(e -> loadOrders());
@@ -85,8 +86,20 @@ public class AdminController {
         // Добавляем ordersBox в mainBox
         mainBox.getChildren().add(ordersBox);
 
-        // --- Разделитель ---
-        mainBox.getChildren().add(new Separator());
+        // Создаём контейнер HBox, который будет выравнивать содержимое по центру
+        HBox sepContainer = new HBox();
+        sepContainer.setAlignment(Pos.CENTER);
+
+// Создаём сам разделитель, ограничивая его ширину
+        Separator shortSeparator = new Separator();
+        shortSeparator.setPrefWidth(400);
+
+// Добавляем разделитель в контейнер
+        sepContainer.getChildren().add(shortSeparator);
+
+// Теперь добавляем HBox (с коротким сепаратором) в mainBox
+        mainBox.getChildren().add(sepContainer);
+
 
         // -------------------- Блок ТОВАРОВ --------------------
         HBox productsBox = new HBox(15);
@@ -127,7 +140,15 @@ public class AdminController {
         mainBox.getChildren().add(productsBox);
 
         // --- Ещё один разделитель ---
-        mainBox.getChildren().add(new Separator());
+        // Создаём контейнер HBox, который будет выравнивать содержимое по центру
+        HBox sepContainer2 = new HBox();
+        sepContainer2.setAlignment(Pos.CENTER);
+        Separator shortSeparator2 = new Separator();
+        shortSeparator2.setPrefWidth(400);
+        sepContainer2.getChildren().add(shortSeparator2);
+
+        mainBox.getChildren().add(sepContainer2);
+
 
         // -------------------- Кнопка «Выйти» в самом низу, по центру --------------------
         Button logoutBtn = new Button("Выйти");
@@ -155,8 +176,11 @@ public class AdminController {
                     .append("Пользователь: ").append(o.getUserLogin()).append(" | ")
                     .append("Дата: ").append(o.getDateTime()).append(" | ")
                     .append("Статус: ").append(o.getStatus()).append(" | ")
-                    .append("Адрес: ").append(o.getAddress())
-                    .append("\n");
+                    .append("Адрес: ").append(o.getAddress()).append("\n");
+            if (o.getItemsDesc() != null && !o.getItemsDesc().isEmpty()) {
+                sb.append("Позиции:\n").append(o.getItemsDesc()).append("\n");
+            }
+            sb.append("\n");
         }
         if (allOrders.isEmpty()) {
             sb.append("Пока нет заказов");

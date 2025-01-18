@@ -1,11 +1,14 @@
 package com.example.app.service;
-
 import com.example.app.model.Order;
 import com.example.app.model.OrderStatus;
 
+import java.io.*;
 import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 public class OrderService {
     private List<Order> orders;
@@ -15,10 +18,10 @@ public class OrderService {
     }
 
     // Создание нового заказа
-    public void createOrder(String userLogin, String address) {
-        Order newOrder = new Order(userLogin, LocalDateTime.now(), OrderStatus.NEW, address);
+    public void createOrder(String userLogin, String address, String itemsDesc) {
+        Order newOrder = new Order(userLogin, LocalDateTime.now(), OrderStatus.NEW, address, itemsDesc);
         orders.add(newOrder);
-        FileStorage.saveOrders(orders); // если вы храните заказы в файле
+        FileStorage.saveOrders(orders);
     }
 
 

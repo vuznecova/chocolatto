@@ -175,7 +175,8 @@ public class ShopController {
             new Alert(Alert.AlertType.WARNING, "Корзина пуста!").showAndWait();
             return;
         }
-        // Спрашиваем адрес
+
+        // Спросить адрес
         AddressDialogController dialog = new AddressDialogController(
                 (Stage) rootPane.getScene().getWindow()
         );
@@ -188,12 +189,43 @@ public class ShopController {
             return;
         }
 
-        MainApp.getOrderService().createOrder(currentUser.getLogin(), address);
+        // 1) Считаем итоговую сумму
+        double total = 0.0;
+        for (Product p : cart) {
+            total += p.getPrice();
+        }
+
+        // 2) Формируем описание позиций (если хотите показать админу)
+        String itemsDesc = buildItemsDescription(cart)
+                + "\nИтого: " + total + " $";
+
+        // 3) Создаём заказ в OrderService (с новым параметром itemsDesc)
+        //    Предположим, что createOrder(user, addr, itemsDesc) уже реализован.
+        MainApp.getOrderService().createOrder(currentUser.getLogin(), address, itemsDesc);
+
+        // 4) Очищаем корзину
         cart.clear();
         cartLabel.setText("Корзина пуста");
+
+        // 5) Показываем сообщение пользователю
         new Alert(Alert.AlertType.INFORMATION,
-                "Заказ оформлен!\nАдрес: " + address).showAndWait();
+                "Заказ оформлен!\nАдрес: " + address +
+                        "\nИтоговая сумма: " + total + " $").showAndWait();
     }
+
+
+    private String buildItemsDescription(List<Product> cart) {
+        StringBuilder sb = new StringBuilder();
+        int index = 1;
+        for (Product p : cart) {
+            sb.append(index++).append(") ")
+                    .append(p.getName())
+                    .append(" (").append(p.getPrice()).append(" $)\n");
+        }
+        return sb.toString().trim();
+    }
+
+
 
     // ------------------------------------------
     // Просмотр заказов

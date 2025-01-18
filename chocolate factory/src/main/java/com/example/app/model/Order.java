@@ -10,12 +10,14 @@ public class Order {
 
     // Новое поле для хранения адреса доставки
     private String address;
+    private String itemsDesc;
 
-    public Order(String userLogin, LocalDateTime dateTime, OrderStatus status, String address) {
+    public Order(String userLogin, LocalDateTime dateTime, OrderStatus status, String address, String itemsDesc){
         this.userLogin = userLogin;
         this.dateTime = dateTime;
         this.status = status;
         this.address = address;
+        this.itemsDesc = itemsDesc;
     }
 
     public String getUserLogin() {
@@ -42,29 +44,54 @@ public class Order {
         this.address = address;
     }
 
+    public String getItemsDesc() {
+        return itemsDesc;
+    }
+
     // Преобразуем в CSV-строку с учётом адреса
     @Override
     public String toString() {
-        // Формат: userLogin;2025-01-01T10:30:00;NEW;адрес
+        // Форматируем LocalDateTime в строку
+        String dtStr = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        // Пишем поля через «;»
+        // Заменим «;» внутри address/itemsDesc на запятую, если боимся конфликтов
+        String safeAddress = (address == null) ? "" : address.replace(";", ",");
+        String safeItems = (itemsDesc == null) ? "" : itemsDesc.replace(";", ",");
+        // Итог: user;2023-12-20T10:12;NEW;адрес;items
         return userLogin + ";"
-                + dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + ";"
+                + dtStr + ";"
                 + status + ";"
-                + (address == null ? "" : address.replace(";", ","));
-        // Заменяем ; внутри адреса на запятую, чтобы не ломать CSV
+                + safeAddress + ";"
+                + safeItems;
     }
 
-    // Парсим из строки
+    // Десериализация (чтение из файла)
     public static Order fromString(String line) {
+        // Разбиваем по ";"
         String[] parts = line.split(";");
-        if (parts.length < 3) return null;
-        String user = parts[0];
-        LocalDateTime dt = LocalDateTime.parse(parts[1], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        OrderStatus st = OrderStatus.valueOf(parts[2]);
-        String addr = "";
-        if (parts.length > 3) {
-            addr = parts[3].replace(",", ";");
-            // Возвращаем точку с запятой, если заменяли
+        if (parts.length < 3) {
+            // Если меньше 3 полей, точно что-то не так
+            return null;
         }
-        return new Order(user, dt, st, addr);
+        String user = parts[0];
+        // Парсим дату/время
+        LocalDateTime dt;
+        try {
+            dt = LocalDateTime.parse(parts[1], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        } catch (Exception e) {
+            // Если вдруг дата не парсится — вернётся null
+            return null;
+        }
+        OrderStatus st;
+        try {
+            st = OrderStatus.valueOf(parts[2]);
+        } catch (Exception e) {
+            return null;
+        }
+        // address и itemsDesc могут быть пустыми
+        String addr = (parts.length > 3) ? parts[3].replace(",", ";") : "";
+        String items = (parts.length > 4) ? parts[4].replace(",", ";") : "";
+
+        return new Order(user, dt, st, addr, items);
     }
 }

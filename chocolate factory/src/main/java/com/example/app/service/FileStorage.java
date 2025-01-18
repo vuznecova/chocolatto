@@ -11,6 +11,7 @@ import java.util.List;
 public class FileStorage {
     private static final String USERS_FILE = "users.txt";
     private static final String ORDERS_FILE = "orders.txt";
+    public static final String PRODUCTS_FILE = "products.txt";
 
     // ======= Работа с пользователями =======
 
@@ -76,7 +77,6 @@ public class FileStorage {
 
 
     // В FileStorage.java
-    public static final String PRODUCTS_FILE = "products.txt";
 
     public static List<Product> loadProducts() {
         List<Product> products = new ArrayList<>();
