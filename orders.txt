@@ -1,18 +1,4 @@
-Pupa;2025-01-18T11:25:36.3862633;NEW;fjjfj, jfjjf, fjfjf, j45;1) Молочный шоколад (5.0 $)
-2) Тёмный шоколад (6.0 $)
-3) Cake (13.0 $)
-4) Maffin (2.0 $)
-5) Oreo chocolate (4.0 $)
-Итого: 30.0 $
-Pupa;2025-01-18T11:25:52.5720861;NEW;tyhtdjj, hdfrh, yhjj, 15;1) Cake (13.0 $)
-2) Kinder Bueno (4.0 $)
-3) Тёмный шоколад (6.0 $)
-4) Молочный шоколад (5.0 $)
-Итого: 28.0 $
-Pupa;2025-01-18T11:26:08.7860571;NEW;hhrh, hthth, htydyyj, 134;1) Lindt Dark chocolate (5.0 $)
-2) Lindt Dark chocolate (5.0 $)
+Pupa;2025-01-18T12:12:36.9957827;IN_PROGRESS;fffffff, ffds, sdsds, 12331;1) White chocolate (3.0 $)
+2) Oreo chocolate (4.0 $)
 3) Lindt Dark chocolate (5.0 $)
-4) Lindt Dark chocolate (5.0 $)
-5) Lindt Dark chocolate (5.0 $)
-6) Lindt Dark chocolate (5.0 $)
-Итого: 30.0 $
+Итого: 12.0 $

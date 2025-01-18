@@ -7,12 +7,11 @@ public class Order {
     private String userLogin;
     private LocalDateTime dateTime;
     private OrderStatus status;
-
-    // Новое поле для хранения адреса доставки
     private String address;
     private String itemsDesc;
 
-    public Order(String userLogin, LocalDateTime dateTime, OrderStatus status, String address, String itemsDesc){
+    public Order(String userLogin, LocalDateTime dateTime,
+                 OrderStatus status, String address, String itemsDesc) {
         this.userLogin = userLogin;
         this.dateTime = dateTime;
         this.status = status;
@@ -20,44 +19,23 @@ public class Order {
         this.itemsDesc = itemsDesc;
     }
 
-    public String getUserLogin() {
-        return userLogin;
-    }
+    public String getUserLogin() { return userLogin; }
+    public LocalDateTime getDateTime() { return dateTime; }
+    public OrderStatus getStatus() { return status; }
+    public void setStatus(OrderStatus s) { this.status = s; }
+    public String getAddress() { return address; }
+    public String getItemsDesc() { return itemsDesc; }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getItemsDesc() {
-        return itemsDesc;
-    }
-
-    // Преобразуем в CSV-строку с учётом адреса
+    // Сериализация (запись в одну CSV-строку)
     @Override
     public String toString() {
-        // Форматируем LocalDateTime в строку
+        // Форматируем LocalDateTime в ISO-строку
         String dtStr = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        // Пишем поля через «;»
-        // Заменим «;» внутри address/itemsDesc на запятую, если боимся конфликтов
+        // Заменяем ; внутри address/itemsDesc, если боимся конфликтов
         String safeAddress = (address == null) ? "" : address.replace(";", ",");
-        String safeItems = (itemsDesc == null) ? "" : itemsDesc.replace(";", ",");
-        // Итог: user;2023-12-20T10:12;NEW;адрес;items
+        String safeItems  = (itemsDesc == null) ? "" : itemsDesc.replace(";", ",");
+
+        // user;2025-01-23T17:25:00;NEW;safeAddress;safeItems
         return userLogin + ";"
                 + dtStr + ";"
                 + status + ";"
@@ -65,30 +43,30 @@ public class Order {
                 + safeItems;
     }
 
-    // Десериализация (чтение из файла)
+    // Десериализация (чтение строки из CSV)
     public static Order fromString(String line) {
-        // Разбиваем по ";"
+        // Разбиваем
         String[] parts = line.split(";");
         if (parts.length < 3) {
-            // Если меньше 3 полей, точно что-то не так
+            // Минимум 3 поля (логин, дата, статус).
             return null;
         }
+
         String user = parts[0];
-        // Парсим дату/время
         LocalDateTime dt;
         try {
             dt = LocalDateTime.parse(parts[1], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         } catch (Exception e) {
-            // Если вдруг дата не парсится — вернётся null
+            System.out.println("Ошибка парсинга даты: " + parts[1]);
             return null;
         }
         OrderStatus st;
         try {
             st = OrderStatus.valueOf(parts[2]);
         } catch (Exception e) {
+            System.out.println("Ошибка парсинга статуса: " + parts[2]);
             return null;
         }
-        // address и itemsDesc могут быть пустыми
         String addr = (parts.length > 3) ? parts[3].replace(",", ";") : "";
         String items = (parts.length > 4) ? parts[4].replace(",", ";") : "";
 

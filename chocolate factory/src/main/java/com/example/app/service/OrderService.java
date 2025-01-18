@@ -1,31 +1,32 @@
 package com.example.app.service;
+
 import com.example.app.model.Order;
 import com.example.app.model.OrderStatus;
 
-import java.io.*;
 import java.time.LocalDateTime;
-
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 public class OrderService {
     private List<Order> orders;
 
     public OrderService() {
+        // Загружаем при создании
         orders = FileStorage.loadOrders();
     }
 
-    // Создание нового заказа
     public void createOrder(String userLogin, String address, String itemsDesc) {
-        Order newOrder = new Order(userLogin, LocalDateTime.now(), OrderStatus.NEW, address, itemsDesc);
+        Order newOrder = new Order(
+                userLogin,
+                LocalDateTime.now(),
+                OrderStatus.NEW,
+                address,
+                itemsDesc
+        );
         orders.add(newOrder);
         FileStorage.saveOrders(orders);
     }
 
-
-    // Получить заказы конкретного пользователя
     public List<Order> getOrdersByUser(String userLogin) {
         List<Order> result = new ArrayList<>();
         for (Order o : orders) {
@@ -36,21 +37,18 @@ public class OrderService {
         return result;
     }
 
-    // Получить все заказы (для администратора)
     public List<Order> getAllOrders() {
+        // Возвращаем копию
         return new ArrayList<>(orders);
     }
 
     public void removeOrder(Order order) {
         orders.remove(order);
-        FileStorage.saveOrders(orders); // если вы храните заказы в файле
+        FileStorage.saveOrders(orders);
     }
 
-
-    // Изменить статус заказа
     public void changeOrderStatus(Order order, OrderStatus newStatus) {
         order.setStatus(newStatus);
         FileStorage.saveOrders(orders);
     }
 }
-

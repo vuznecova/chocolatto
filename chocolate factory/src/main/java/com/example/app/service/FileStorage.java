@@ -9,23 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileStorage {
+
     private static final String USERS_FILE = "users.txt";
     private static final String ORDERS_FILE = "orders.txt";
     public static final String PRODUCTS_FILE = "products.txt";
 
-    // ======= Работа с пользователями =======
-
+    // ======= Пользователи =======
     public static List<User> loadUsers() {
         List<User> users = new ArrayList<>();
         File file = new File(USERS_FILE);
-        if (!file.exists()) return users;  // Файл может не существовать при первом запуске
+        if (!file.exists()) return users;
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
                 User u = User.fromString(line);
-                if (u != null) {
-                    users.add(u);
-                }
+                if (u != null) users.add(u);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,8 +42,7 @@ public class FileStorage {
         }
     }
 
-    // ======= Работа с заказами =======
-
+    // ======= Заказы =======
     public static List<Order> loadOrders() {
         List<Order> orders = new ArrayList<>();
         File file = new File(ORDERS_FILE);
@@ -53,6 +50,7 @@ public class FileStorage {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
+                // Можно добавить отладку: System.out.println("Load line: " + line);
                 Order o = Order.fromString(line);
                 if (o != null) {
                     orders.add(o);
@@ -65,9 +63,12 @@ public class FileStorage {
     }
 
     public static void saveOrders(List<Order> orders) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(ORDERS_FILE))) {
+        File file = new File(ORDERS_FILE);
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             for (Order o : orders) {
-                bw.write(o.toString());
+                String line = o.toString();
+                // Можно отладочно: System.out.println("Save line: " + line);
+                bw.write(line);
                 bw.newLine();
             }
         } catch (IOException e) {
@@ -75,13 +76,11 @@ public class FileStorage {
         }
     }
 
-
-    // В FileStorage.java
-
+    // ======= Товары =======
     public static List<Product> loadProducts() {
         List<Product> products = new ArrayList<>();
         File file = new File(PRODUCTS_FILE);
-        if (!file.exists()) return products; // при первом запуске файла может не быть
+        if (!file.exists()) return products;
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -102,15 +101,11 @@ public class FileStorage {
         if (parts.length < 2) return null;
         String name = parts[0];
         double price = Double.parseDouble(parts[1]);
-        String imagePath = "";
-        if (parts.length > 2) {
-            imagePath = parts[2];
-        }
+        String imagePath = (parts.length > 2) ? parts[2] : "";
         return new Product(name, price, imagePath);
     }
 
     public static void saveProducts(List<Product> products) {
-        File file = new File(PRODUCTS_FILE);
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(PRODUCTS_FILE))) {
             for (Product p : products) {
                 bw.write(productToString(p));
@@ -122,12 +117,7 @@ public class FileStorage {
     }
 
     private static String productToString(Product p) {
-        // Запишем через ;  (причём сам imagePath может быть пустым)
         return p.getName() + ";" + p.getPrice() + ";"
-                + (p.getImagePath() == null ? "" : p.getImagePath());
+                + ((p.getImagePath() == null) ? "" : p.getImagePath());
     }
-
-
-
 }
-
