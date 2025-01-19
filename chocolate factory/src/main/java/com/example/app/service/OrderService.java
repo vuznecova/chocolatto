@@ -51,4 +51,9 @@ public class OrderService {
         order.setStatus(newStatus);
         FileStorage.saveOrders(orders);
     }
+
+    public void saveAllOrders() {
+        FileStorage.saveOrders(orders);
+    }
+
 }
