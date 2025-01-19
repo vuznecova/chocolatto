@@ -1,2 +1,2 @@
-Pupa;12345;CUSTOMER
-Lupa;12345;ADMIN
+user1;password1;CUSTOMER
+admin;adminpass;ADMIN

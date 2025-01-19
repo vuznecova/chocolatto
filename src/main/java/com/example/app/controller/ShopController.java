@@ -43,7 +43,7 @@ public class ShopController {
 
 
 
-        Label welcomeLabel = new Label("Welcome" + currentUser.getLogin() + "!");
+        Label welcomeLabel = new Label("Welcome, " + currentUser.getLogin() + "!");
         welcomeLabel.setPadding(new Insets(10));
         welcomeLabel.setStyle("-fx-font-size: 18px;");
         HBox topBox = new HBox(welcomeLabel);
