@@ -28,9 +28,7 @@ public class User {
         return login + ";" + password + ";" + role;
     }
 
-    // Фабричный метод для создания из строки (CSV)
     public static User fromString(String line) {
-        // Формат: login;password;role
         String[] parts = line.split(";");
         if (parts.length < 3) return null;
         Role parsedRole = Role.valueOf(parts[2]);

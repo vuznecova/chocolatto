@@ -18,23 +18,21 @@ import java.util.List;
 
 public class ShopController {
 
-    private StackPane rootPane;   // фон (бэкграунд)
-    private BorderPane borderPane; // основная разметка: top/center/bottom/left/right
+    private StackPane rootPane;
+    private BorderPane borderPane;
 
-    private VBox itemsBox;         // контейнер для карточек товаров
-    private Label cartLabel;       // метка «Корзина пуста»
+    private VBox itemsBox;
+    private Label cartLabel;
 
     private User currentUser;
-    private List<Product> cart;    // товары в корзине
+    private List<Product> cart;
 
     public ShopController(User user) {
         this.currentUser = user;
         this.cart = new ArrayList<>();
 
-        // 1) Создаём корневой StackPane с фоном
         rootPane = ViewUtils.createStackPaneWithBackground("/images/background.jpg");
 
-        // 2) Внутри StackPane размещаем BorderPane, чтобы удобно делить на части
         borderPane = new BorderPane();
         rootPane.getChildren().add(borderPane);
         StackPane.setAlignment(borderPane, Pos.CENTER);
@@ -45,56 +43,45 @@ public class ShopController {
 
 
 
-        // ------------------ TOP: Приветствие ------------------
-        Label welcomeLabel = new Label("Добро пожаловать, " + currentUser.getLogin() + "!");
+        Label welcomeLabel = new Label("Welcome" + currentUser.getLogin() + "!");
         welcomeLabel.setPadding(new Insets(10));
         welcomeLabel.setStyle("-fx-font-size: 18px;");
-        // Если хотите выровнять по центру
         HBox topBox = new HBox(welcomeLabel);
         topBox.setAlignment(Pos.CENTER);
         borderPane.setTop(topBox);
 
-        // ------------------ CENTER: Прокручиваемый список товаров ------------------
-        // VBox со всеми карточками
         itemsBox = new VBox(15);
         itemsBox.setAlignment(Pos.TOP_CENTER);
         itemsBox.setPadding(new Insets(20));
         itemsBox.setMaxWidth(900);
 
-        // Создаём ScrollPane, помещаем туда itemsBox
         ScrollPane scrollPane = new ScrollPane(itemsBox);
         scrollPane.setFitToWidth(true);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
-        // Помещаем ScrollPane в центр BorderPane
         borderPane.setCenter(scrollPane);
 
-        // Загружаем список товаров
         List<Product> allProducts = MainApp.getProductService().getAllProducts();
         for (Product p : allProducts) {
             itemsBox.getChildren().add(createProductBox(p));
         }
 
-        // ------------------ BOTTOM: Кнопки и информация о корзине ------------------
-        // Создадим VBox (или HBox) с кнопками и меткой
         VBox bottomBox = new VBox(10);
         bottomBox.setAlignment(Pos.CENTER);
         bottomBox.setPadding(new Insets(10));
 
-        cartLabel = new Label("Корзина пуста");
+        cartLabel = new Label("Cart is empty");
 
-        Button orderBtn = new Button("Оформить заказ");
-        Button myOrdersBtn = new Button("Мои заказы");
-        Button cancelOrderBtn = new Button("Отменить заказ");
-        Button logoutBtn = new Button("Выйти");
+        Button orderBtn = new Button("Create order");
+        Button myOrdersBtn = new Button("My orders");
+        Button cancelOrderBtn = new Button("Cancel orders");
+        Button logoutBtn = new Button("Exit");
 
-        // Привязываем логику
         orderBtn.setOnAction(e -> createOrder());
         myOrdersBtn.setOnAction(e -> showMyOrders());
         cancelOrderBtn.setOnAction(e -> cancelOrder());
         logoutBtn.setOnAction(e -> logout());
 
-        // Добавляем в bottomBox
         bottomBox.getChildren().addAll(
                 cartLabel,
                 orderBtn,
@@ -103,7 +90,6 @@ public class ShopController {
                 logoutBtn
         );
 
-        // Помещаем bottomBox в низ BorderPane
         borderPane.setBottom(bottomBox);
     }
 
@@ -111,9 +97,6 @@ public class ShopController {
         return rootPane;
     }
 
-    // ------------------------------------------
-    // Создаём "карточку" товара
-    // ------------------------------------------
     private HBox createProductBox(Product product) {
         HBox productBox = new HBox(10);
         productBox.setAlignment(Pos.CENTER_LEFT);
@@ -121,7 +104,6 @@ public class ShopController {
         productBox.setMaxWidth(800);
         productBox.setStyle("-fx-border-color: gray; -fx-padding: 5;");
 
-        // Загружаем картинку (если есть)
         ImageView imageView = new ImageView();
         String path = product.getImagePath();
         if (path != null && !path.isEmpty()) {
@@ -135,19 +117,16 @@ public class ShopController {
 
         Label productLabel = new Label(product.getName() + " - " + product.getPrice() + " $");
 
-        Button addBtn = new Button("В корзину");
+        Button addBtn = new Button("Add to cart");
         addBtn.setOnAction(e -> {
             cart.add(product);
-            cartLabel.setText("В корзине: " + cart.size() + " товар(ов)");
+            cartLabel.setText("There are " + cart.size() + " products in the cart");
         });
 
         productBox.getChildren().addAll(imageView, productLabel, addBtn);
         return productBox;
     }
 
-    // ------------------------------------------
-    // Загрузка картинки безопасно
-    // ------------------------------------------
     private Image loadProductImage(String path) {
         try {
             if (path.startsWith("/")) {
@@ -155,28 +134,23 @@ public class ShopController {
                 if (url != null) {
                     return new Image(url.toExternalForm());
                 } else {
-                    System.out.println("Не найдена картинка: " + path);
+                    System.out.println("Image not found: " + path);
                 }
             } else {
-                // Путь во внешней файловой системе
                 return new Image("file:" + path);
             }
         } catch (Exception e) {
-            System.out.println("Ошибка загрузки изображения: " + e.getMessage());
+            System.out.println("Image failed to load: " + e.getMessage());
         }
         return null;
     }
 
-    // ------------------------------------------
-    // Оформление заказа
-    // ------------------------------------------
     private void createOrder() {
         if (cart.isEmpty()) {
-            new Alert(Alert.AlertType.WARNING, "Корзина пуста!").showAndWait();
+            new Alert(Alert.AlertType.WARNING, "Cart is empty!").showAndWait();
             return;
         }
 
-        // Спросить адрес
         AddressDialogController dialog = new AddressDialogController(
                 (Stage) rootPane.getScene().getWindow()
         );
@@ -184,33 +158,27 @@ public class ShopController {
 
         String address = dialog.getAddressResult();
         if (address == null) {
-            new Alert(Alert.AlertType.INFORMATION, "Заказ не оформлен без адреса.")
+            new Alert(Alert.AlertType.INFORMATION, "You cannot create an order without address.")
                     .showAndWait();
             return;
         }
 
-        // 1) Считаем итоговую сумму
         double total = 0.0;
         for (Product p : cart) {
             total += p.getPrice();
         }
 
-        // 2) Формируем описание позиций (если хотите показать админу)
         String itemsDesc = buildItemsDescription(cart)
-                + "\nИтого: " + total + " $";
+                + "\nTotal: " + total + " $";
 
-        // 3) Создаём заказ в OrderService (с новым параметром itemsDesc)
-        //    Предположим, что createOrder(user, addr, itemsDesc) уже реализован.
         MainApp.getOrderService().createOrder(currentUser.getLogin(), address, itemsDesc);
 
-        // 4) Очищаем корзину
         cart.clear();
-        cartLabel.setText("Корзина пуста");
+        cartLabel.setText("The cart is empty");
 
-        // 5) Показываем сообщение пользователю
         new Alert(Alert.AlertType.INFORMATION,
-                "Заказ оформлен!\nАдрес: " + address +
-                        "\nИтоговая сумма: " + total + " $").showAndWait();
+                "Order was placed!\nAddress: " + address +
+                        "\nYour total: " + total + " $").showAndWait();
     }
 
 
@@ -225,52 +193,42 @@ public class ShopController {
         return sb.toString().trim();
     }
 
-
-
-    // ------------------------------------------
-    // Просмотр заказов
-    // ------------------------------------------
     private void showMyOrders() {
         var myOrders = MainApp.getOrderService().getOrdersByUser(currentUser.getLogin());
-        StringBuilder sb = new StringBuilder("Мои заказы:\n");
+        StringBuilder sb = new StringBuilder("My orders:\n");
         if (myOrders.isEmpty()) {
-            sb.append("Нет заказов");
+            sb.append("No orders");
         } else {
             for (var o : myOrders) {
                 sb.append(o.getDateTime())
                         .append(" — ").append(o.getStatus())
-                        .append(" | Адрес: ").append(o.getAddress())
+                        .append(" | Address: ").append(o.getAddress())
                         .append("\n");
             }
         }
         new Alert(Alert.AlertType.INFORMATION, sb.toString()).showAndWait();
     }
 
-    // ------------------------------------------
-    // Отмена (удаление) заказа
-    // ------------------------------------------
     private void cancelOrder() {
         var myOrders = MainApp.getOrderService().getOrdersByUser(currentUser.getLogin());
         if (myOrders.isEmpty()) {
             new Alert(Alert.AlertType.INFORMATION,
-                    "У вас нет заказов для отмены.").showAndWait();
+                    "You have no orders to cancel.").showAndWait();
             return;
         }
 
-        // Показываем список
-        StringBuilder sb = new StringBuilder("Мои заказы:\n");
+        StringBuilder sb = new StringBuilder("My orders:\n");
         for (int i = 0; i < myOrders.size(); i++) {
             sb.append(i).append(") ")
                     .append(myOrders.get(i).getDateTime()).append(" - ")
-                    .append(myOrders.get(i).getStatus()).append(" | Адрес: ")
+                    .append(myOrders.get(i).getStatus()).append(" | Address: ")
                     .append(myOrders.get(i).getAddress())
                     .append("\n");
         }
         new Alert(Alert.AlertType.INFORMATION, sb.toString()).showAndWait();
 
-        // Спрашиваем индекс
         TextInputDialog inputDialog = new TextInputDialog();
-        inputDialog.setHeaderText("Введите номер заказа для отмены:");
+        inputDialog.setHeaderText("Enter order number for cancellation:");
         var result = inputDialog.showAndWait();
         if (result.isEmpty()) return;
 
@@ -279,26 +237,22 @@ public class ShopController {
         try {
             index = Integer.parseInt(indexStr);
         } catch (NumberFormatException e) {
-            new Alert(Alert.AlertType.ERROR, "Неверный номер заказа!").showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Incorrect order number!").showAndWait();
             return;
         }
 
         if (index < 0 || index >= myOrders.size()) {
-            new Alert(Alert.AlertType.ERROR, "Такого заказа нет!").showAndWait();
+            new Alert(Alert.AlertType.ERROR, "No such order").showAndWait();
             return;
         }
 
-        // Удаляем заказ
         MainApp.getOrderService().removeOrder(myOrders.get(index));
 
         new Alert(Alert.AlertType.INFORMATION,
-                "Заказ отменён. Вам вернутся деньги в течение пары дней!")
+                "The order was cancelled! You will receive a refund in a couple of days!")
                 .showAndWait();
     }
 
-    // ------------------------------------------
-    // Выход
-    // ------------------------------------------
     private void logout() {
         LoginController loginController = new LoginController();
         rootPane.getScene().setRoot(loginController.getView());

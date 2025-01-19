@@ -18,7 +18,6 @@ public class AddressDialogController {
     private TextField streetField;
     private TextField houseField;
 
-    // Здесь мы храним результат, который потом может забрать ShopController
     private String addressResult;
 
     public AddressDialogController(Stage parentStage) {
@@ -65,28 +64,24 @@ public class AddressDialogController {
     }
 
     private void onOk() {
-        // Считываем все поля, собираем в одну строку (или делаем объект Address)
         String country = countryField.getText().trim();
         String city = cityField.getText().trim();
         String street = streetField.getText().trim();
         String house = houseField.getText().trim();
 
-        // Минимальная проверка
         if (country.isEmpty() || city.isEmpty()
                 || street.isEmpty() || house.isEmpty()) {
-            // Можно показать Alert
             new Alert(Alert.AlertType.WARNING, "Пожалуйста, заполните все поля!")
                     .showAndWait();
             return;
         }
 
-        // Запоминаем адрес
         this.addressResult = country + ", " + city + ", " + street + ", " + house;
         dialogStage.close();
     }
 
     private void onCancel() {
-        this.addressResult = null; // ничего не возвращаем
+        this.addressResult = null;
         dialogStage.close();
     }
 

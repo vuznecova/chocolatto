@@ -34,7 +34,6 @@ public class MainApp extends Application {
         orderService = new OrderService();
         productService = new ProductService();
 
-        // Инициализируем контроллер логина
         LoginController loginController = new LoginController();
         Scene scene = new Scene(loginController.getView(), 1200, 800);
 

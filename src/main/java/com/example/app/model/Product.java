@@ -3,7 +3,7 @@ package com.example.app.model;
 public class Product {
     private String name;
     private double price;
-    private String imagePath; // путь к файлу с изображением
+    private String imagePath;
 
     public Product(String name, double price, String imagePath) {
         this.name = name;

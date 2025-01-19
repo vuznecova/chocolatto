@@ -11,7 +11,6 @@ public class OrderService {
     private List<Order> orders;
 
     public OrderService() {
-        // Загружаем при создании
         orders = FileStorage.loadOrders();
     }
 
@@ -38,7 +37,6 @@ public class OrderService {
     }
 
     public List<Order> getAllOrders() {
-        // Возвращаем копию
         return new ArrayList<>(orders);
     }
 
