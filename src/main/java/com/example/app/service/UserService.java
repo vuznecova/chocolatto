@@ -11,26 +11,22 @@ public class UserService {
     private List<User> users;
 
     public UserService() {
-        // Загружаем пользователей из файла при инициализации
         users = FileStorage.loadUsers();
     }
 
     public User login(String login, String password) throws Exception {
-        // Ищем пользователя по логину и паролю
         for (User u : users) {
             if (u.getLogin().equals(login) && u.getPassword().equals(password)) {
                 return u;
             }
         }
-        // Если не нашли — выбрасываем исключение
-        throw new Exception("Неверный логин или пароль!");
+        throw new Exception("Invalid login or password!");
     }
 
     public User register(String login, String password, Role role) throws Exception {
-        // Проверка: нет ли уже такого логина
         for (User u : users) {
             if (u.getLogin().equals(login)) {
-                throw new Exception("Логин уже существует!");
+                throw new Exception("Such login already exists!");
             }
         }
         User newUser = new User(login, password, role);

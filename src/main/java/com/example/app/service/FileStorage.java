@@ -14,7 +14,6 @@ public class FileStorage {
     private static final String ORDERS_FILE = "orders.txt";
     public static final String PRODUCTS_FILE = "products.txt";
 
-    // ======= Пользователи =======
     public static List<User> loadUsers() {
         List<User> users = new ArrayList<>();
         File file = new File(USERS_FILE);
@@ -42,7 +41,6 @@ public class FileStorage {
         }
     }
 
-    // ======= Заказы =======
     public static List<Order> loadOrders() {
         List<Order> orders = new ArrayList<>();
         File file = new File(ORDERS_FILE);
@@ -50,7 +48,6 @@ public class FileStorage {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                // Можно добавить отладку: System.out.println("Load line: " + line);
                 Order o = Order.fromString(line);
                 if (o != null) {
                     orders.add(o);
@@ -67,7 +64,6 @@ public class FileStorage {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             for (Order o : orders) {
                 String line = o.toString();
-                // Можно отладочно: System.out.println("Save line: " + line);
                 bw.write(line);
                 bw.newLine();
             }
@@ -76,7 +72,6 @@ public class FileStorage {
         }
     }
 
-    // ======= Товары =======
     public static List<Product> loadProducts() {
         List<Product> products = new ArrayList<>();
         File file = new File(PRODUCTS_FILE);
@@ -96,7 +91,6 @@ public class FileStorage {
     }
 
     private static Product productFromString(String line) {
-        // Формат: name;price;imagePath
         String[] parts = line.split(";");
         if (parts.length < 2) return null;
         String name = parts[0];

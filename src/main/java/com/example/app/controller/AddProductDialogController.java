@@ -20,22 +20,22 @@ public class AddProductDialogController {
         dialogStage = new Stage();
         dialogStage.initModality(Modality.WINDOW_MODAL);
         dialogStage.initOwner(parentStage);
-        dialogStage.setTitle("Добавить новый товар");
+        dialogStage.setTitle("Add new product");
 
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
 
-        Label nameLbl = new Label("Название товара:");
+        Label nameLbl = new Label("Product name:");
         nameField = new TextField();
 
-        Label priceLbl = new Label("Цена:");
+        Label priceLbl = new Label("Price:");
         priceField = new TextField();
 
-        Label imageLbl = new Label("Путь к изображению (например: /images/shoko.png):");
+        Label imageLbl = new Label("Path to image:");
         imagePathField = new TextField();
 
         Button okBtn = new Button("OK");
-        Button cancelBtn = new Button("Отмена");
+        Button cancelBtn = new Button("Cancel");
 
         okBtn.setOnAction(e -> {
             okClicked = true;

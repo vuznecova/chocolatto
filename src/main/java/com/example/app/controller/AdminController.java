@@ -14,53 +14,45 @@ import java.util.List;
 
 public class AdminController {
 
-    private StackPane rootPane;   // Фон
-    private VBox mainBox;         // Главный вертикальный контейнер
+    private StackPane rootPane;
+    private VBox mainBox;
 
-    // --- Заказы ---
     private TextArea ordersArea;
     private List<Order> allOrders;
     private TextField orderIndexField;
     private ComboBox<OrderStatus> statusCombo;
 
-    // --- Товары ---
     private TextArea productsArea;
 
     public AdminController() {
-        // 1) Фон + главный VBox
         rootPane = ViewUtils.createStackPaneWithBackground("/images/background1.jpg");
         mainBox = ViewUtils.createVBoxCenter(15, 20);
         rootPane.getChildren().add(mainBox);
 
-        // -------------------- Блок ЗАКАЗОВ --------------------
-        // Создаём HBox, чтобы слева положить текстовое поле, а справа кнопки
         HBox ordersBox = new HBox(15);
-        ordersBox.setMaxWidth(900);          // ограничим ширину
+        ordersBox.setMaxWidth(900);
         ordersBox.setStyle("-fx-border-color: gray; -fx-padding: 10;");
-        ordersBox.setFillHeight(true);       // чтобы по высоте элементы растягивались
+        ordersBox.setFillHeight(true);
 
-        // ЛЕВАЯ ЧАСТЬ (Vbox): заголовок и TextArea с заказами
         VBox ordersLeftBox = new VBox(10);
-        Label header = new Label("Админ-панель: все заказы");
+        Label header = new Label("Admin: all orders");
 
         ordersArea = new TextArea();
         ordersArea.setMaxWidth(400);
         ordersArea.setEditable(false);
-        //ordersArea.setStyle("-fx-background-color: transparent;"); // можно отключить, если мешает скроллу
 
         ordersLeftBox.getChildren().addAll(header, ordersArea);
 
-        // ПРАВАЯ ЧАСТЬ (Vbox): кнопки и поля
         VBox ordersRightBox = new VBox(15);
 
-        Button refreshOrdersBtn = new Button("Обновить заказы");
+        Button refreshOrdersBtn = new Button("Update all orders");
         refreshOrdersBtn.setOnAction(e -> loadOrders());
 
-        Label indexLabel = new Label("Введите номер заказа:");
+        Label indexLabel = new Label("Enter order number");
         orderIndexField = new TextField();
         orderIndexField.setMaxWidth(150);
 
-        Label statusLbl = new Label("Новый статус:");
+        Label statusLbl = new Label("New status");
         statusCombo = new ComboBox<>();
         statusCombo.getItems().addAll(
                 OrderStatus.NEW,
@@ -70,7 +62,7 @@ public class AdminController {
         );
         statusCombo.setValue(OrderStatus.NEW);
 
-        Button setStatusBtn = new Button("Изменить статус");
+        Button setStatusBtn = new Button("Change status");
         setStatusBtn.setOnAction(e -> changeStatus());
 
         ordersRightBox.getChildren().addAll(
@@ -80,54 +72,44 @@ public class AdminController {
                 setStatusBtn
         );
 
-        // Добавляем левую и правую часть в HBox
         ordersBox.getChildren().addAll(ordersLeftBox, ordersRightBox);
 
-        // Добавляем ordersBox в mainBox
         mainBox.getChildren().add(ordersBox);
 
-        // Создаём контейнер HBox, который будет выравнивать содержимое по центру
         HBox sepContainer = new HBox();
         sepContainer.setAlignment(Pos.CENTER);
 
-// Создаём сам разделитель, ограничивая его ширину
         Separator shortSeparator = new Separator();
         shortSeparator.setPrefWidth(400);
 
-// Добавляем разделитель в контейнер
         sepContainer.getChildren().add(shortSeparator);
 
-// Теперь добавляем HBox (с коротким сепаратором) в mainBox
         mainBox.getChildren().add(sepContainer);
 
 
-        // -------------------- Блок ТОВАРОВ --------------------
         HBox productsBox = new HBox(15);
         productsBox.setMaxWidth(900);
         productsBox.setStyle("-fx-border-color: gray; -fx-padding: 10;");
         productsBox.setFillHeight(true);
 
-        // ЛЕВАЯ ЧАСТЬ: заголовок и TextArea
         VBox productsLeftBox = new VBox(10);
-        Label productsLabel = new Label("Список товаров в магазине");
+        Label productsLabel = new Label("Products list");
 
         productsArea = new TextArea();
         productsArea.setMaxWidth(400);
         productsArea.setEditable(false);
-        //productsArea.setStyle("-fx-background-color: transparent;");
 
         productsLeftBox.getChildren().addAll(productsLabel, productsArea);
 
-        // ПРАВАЯ ЧАСТЬ: кнопки
         VBox productsRightBox = new VBox(10);
 
-        Button refreshProductsBtn = new Button("Обновить товары");
+        Button refreshProductsBtn = new Button("Update products");
         refreshProductsBtn.setOnAction(e -> loadProducts());
 
-        Button addProductBtn = new Button("Добавить товар");
+        Button addProductBtn = new Button("Add product");
         addProductBtn.setOnAction(e -> openAddProductDialog());
 
-        Button removeProductBtn = new Button("Удалить товар");
+        Button removeProductBtn = new Button("Delete product");
         removeProductBtn.setOnAction(e -> openRemoveProductDialog());
 
         productsRightBox.getChildren().addAll(
@@ -139,8 +121,6 @@ public class AdminController {
         productsBox.getChildren().addAll(productsLeftBox, productsRightBox);
         mainBox.getChildren().add(productsBox);
 
-        // --- Ещё один разделитель ---
-        // Создаём контейнер HBox, который будет выравнивать содержимое по центру
         HBox sepContainer2 = new HBox();
         sepContainer2.setAlignment(Pos.CENTER);
         Separator shortSeparator2 = new Separator();
@@ -150,12 +130,10 @@ public class AdminController {
         mainBox.getChildren().add(sepContainer2);
 
 
-        // -------------------- Кнопка «Выйти» в самом низу, по центру --------------------
-        Button logoutBtn = new Button("Выйти");
+        Button logoutBtn = new Button("Exit");
         logoutBtn.setOnAction(e -> logout());
         mainBox.getChildren().add(logoutBtn);
 
-        // После сборки структуры — загрузим списки
         loadOrders();
         loadProducts();
     }
@@ -163,27 +141,23 @@ public class AdminController {
     public StackPane getView() {
         return rootPane;
     }
-
-    // ============================================
-    // Методы для заказов
-    // ============================================
     private void loadOrders() {
         allOrders = MainApp.getOrderService().getAllOrders();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < allOrders.size(); i++) {
             Order o = allOrders.get(i);
             sb.append(i).append(") ")
-                    .append("Пользователь: ").append(o.getUserLogin()).append(" | ")
-                    .append("Дата: ").append(o.getDateTime()).append(" | ")
-                    .append("Статус: ").append(o.getStatus()).append(" | ")
-                    .append("Адрес: ").append(o.getAddress()).append("\n");
+                    .append("User: ").append(o.getUserLogin()).append(" | ")
+                    .append("Date: ").append(o.getDateTime()).append(" | ")
+                    .append("Status: ").append(o.getStatus()).append(" | ")
+                    .append("Address: ").append(o.getAddress()).append("\n");
             if (o.getItemsDesc() != null && !o.getItemsDesc().isEmpty()) {
-                sb.append("Позиции:\n").append(o.getItemsDesc()).append("\n");
+                sb.append("Products:\n").append(o.getItemsDesc()).append("\n");
             }
             sb.append("\n");
         }
         if (allOrders.isEmpty()) {
-            sb.append("Пока нет заказов");
+            sb.append("No orders right now");
         }
         ordersArea.setText(sb.toString());
     }
@@ -192,27 +166,24 @@ public class AdminController {
         try {
             int index = Integer.parseInt(orderIndexField.getText());
             if (index < 0 || index >= allOrders.size()) {
-                new Alert(Alert.AlertType.ERROR, "Неверный индекс!").showAndWait();
+                new Alert(Alert.AlertType.ERROR, "Incorrect ID").showAndWait();
                 return;
             }
             Order o = allOrders.get(index);
             OrderStatus newStatus = statusCombo.getValue();
             MainApp.getOrderService().changeOrderStatus(o, newStatus);
             new Alert(Alert.AlertType.INFORMATION,
-                    "Статус заказа изменён на " + newStatus).showAndWait();
+                    "Status was changed to " + newStatus).showAndWait();
             loadOrders();
         } catch (NumberFormatException ex) {
-            new Alert(Alert.AlertType.ERROR, "Введите корректный номер заказа!").showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Enter correct order number").showAndWait();
         }
     }
 
-    // ============================================
-    // Методы для товаров
-    // ============================================
     private void loadProducts() {
         List<Product> allProducts = MainApp.getProductService().getAllProducts();
         if (allProducts.isEmpty()) {
-            productsArea.setText("Нет товаров");
+            productsArea.setText("No products");
             return;
         }
         StringBuilder sb = new StringBuilder();
@@ -242,7 +213,7 @@ public class AdminController {
 
             if (name.isEmpty() || priceStr.isEmpty()) {
                 new Alert(Alert.AlertType.WARNING,
-                        "Название и цена не могут быть пустыми!")
+                        "Price and product name should not be empty")
                         .showAndWait();
                 return;
             }
@@ -251,21 +222,21 @@ public class AdminController {
                 priceVal = Double.parseDouble(priceStr);
             } catch (NumberFormatException e) {
                 new Alert(Alert.AlertType.WARNING,
-                        "Цена должна быть числом!")
+                        "Price must be a number")
                         .showAndWait();
                 return;
             }
             MainApp.getProductService().addProduct(name, priceVal, imagePath);
 
             new Alert(Alert.AlertType.INFORMATION,
-                    "Товар успешно добавлен!").showAndWait();
+                    "Product was added").showAndWait();
             loadProducts();
         }
     }
 
     private void openRemoveProductDialog() {
         TextInputDialog inputDialog = new TextInputDialog();
-        inputDialog.setHeaderText("Введите индекс товара для удаления:");
+        inputDialog.setHeaderText("Enter product ID to remove");
         var result = inputDialog.showAndWait();
         if (result.isEmpty()) return;
 
@@ -274,24 +245,21 @@ public class AdminController {
         try {
             index = Integer.parseInt(indexStr);
         } catch (NumberFormatException e) {
-            new Alert(Alert.AlertType.ERROR, "Неверный формат индекса!").showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Incorrect ID format").showAndWait();
             return;
         }
 
         List<Product> allProducts = MainApp.getProductService().getAllProducts();
         if (index < 0 || index >= allProducts.size()) {
-            new Alert(Alert.AlertType.ERROR, "Такого индекса нет в списке!").showAndWait();
+            new Alert(Alert.AlertType.ERROR, "No such ID").showAndWait();
             return;
         }
 
         MainApp.getProductService().removeProduct(index);
-        new Alert(Alert.AlertType.INFORMATION, "Товар удалён!").showAndWait();
+        new Alert(Alert.AlertType.INFORMATION, "Order was deleted").showAndWait();
         loadProducts();
     }
 
-    // ============================================
-    // Выход
-    // ============================================
     private void logout() {
         LoginController loginController = new LoginController();
         rootPane.getScene().setRoot(loginController.getView());

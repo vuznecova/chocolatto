@@ -26,16 +26,12 @@ public class Order {
     public String getAddress() { return address; }
     public String getItemsDesc() { return itemsDesc; }
 
-    // Сериализация (запись в одну CSV-строку)
     @Override
     public String toString() {
-        // Форматируем LocalDateTime в ISO-строку
         String dtStr = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        // Заменяем ; внутри address/itemsDesc, если боимся конфликтов
         String safeAddress = (address == null) ? "" : address.replace(";", ",");
         String safeItems  = (itemsDesc == null) ? "" : itemsDesc.replace(";", ",");
 
-        // user;2025-01-23T17:25:00;NEW;safeAddress;safeItems
         return userLogin + ";"
                 + dtStr + ";"
                 + status + ";"
@@ -43,12 +39,10 @@ public class Order {
                 + safeItems;
     }
 
-    // Десериализация (чтение строки из CSV)
     public static Order fromString(String line) {
         // Разбиваем
         String[] parts = line.split(";");
         if (parts.length < 3) {
-            // Минимум 3 поля (логин, дата, статус).
             return null;
         }
 

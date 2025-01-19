@@ -12,9 +12,7 @@ import javafx.stage.Stage;
 
 public class RegistrationController {
 
-    // Корневой контейнер с фоном
     private StackPane rootPane;
-    // VBox, в котором лежат все поля и кнопки (по центру)
     private VBox regBox;
 
     private TextField loginField;
@@ -26,53 +24,44 @@ public class RegistrationController {
 
     public RegistrationController() {
 
-        // 1. Создаём корневой StackPane с задним фоном
         rootPane = ViewUtils.createStackPaneWithBackground("/images/background1.jpg");
 
-        // 2. Создаём VBox, центрируем
         regBox = ViewUtils.createVBoxCenter(15, 15);
         regBox.setAlignment(Pos.CENTER);
 
 
-        // Заголовок (по желанию)
-        Label titleLabel = new Label("Регистрация");
+        Label titleLabel = new Label("Register");
         titleLabel.setFont(Font.font(24));
 
-        // Поля для логина/пароля
-        Label loginLbl = new Label("Новый логин:");
+        Label loginLbl = new Label("New login:");
         loginField = new TextField();
         loginField.setMaxWidth(200);
 
-        Label passLbl = new Label("Новый пароль:");
+        Label passLbl = new Label("New password:");
         passwordField = new PasswordField();
         passwordField.setMaxWidth(200);
 
-        // Роль и выбор ADMIN/USER
-        Label roleLbl = new Label("Выберите роль:");
+        Label roleLbl = new Label("Select role:");
         roleCombo = new ComboBox<>();
         roleCombo.getItems().addAll(Role.CUSTOMER, Role.ADMIN);
         roleCombo.setValue(Role.CUSTOMER);
         roleCombo.setOnAction(e -> onRoleChanged());
 
-        // Поле «admin code»
-        adminCodeLabel = new Label("Введите код администратора:");
+        adminCodeLabel = new Label("Enter admin code:");
         adminCodeLabel.setVisible(false);
         adminCodeField = new TextField();
         adminCodeField.setMaxWidth(200);
         adminCodeField.setVisible(false);
 
-        // Кнопки
-        Button regBtn = new Button("Зарегистрировать");
+        Button regBtn = new Button("Register");
         regBtn.setOnAction(e -> doRegister());
 
-        Button backBtn = new Button("Назад");
+        Button backBtn = new Button("Back");
         backBtn.setOnAction(e -> goBack());
 
-        // Сообщение об ошибке/успехе
         messageLabel = new Label();
-        messageLabel.setStyle("-fx-text-fill: red;"); // красный текст при ошибках
+        messageLabel.setStyle("-fx-text-fill: red;");
 
-        // 3. Добавляем всё в regBox
         regBox.getChildren().addAll(
                 titleLabel,
                 loginLbl, loginField,
@@ -83,21 +72,15 @@ public class RegistrationController {
                 messageLabel
         );
 
-        // 4. Добавляем regBox в rootPane и выравниваем по центру
         rootPane.getChildren().add(regBox);
         StackPane.setAlignment(regBox, Pos.CENTER);
     }
 
-    /**
-     * Возвращаем корневой StackPane (с фоном),
-     * чтобы при переключении сцен фон был виден.
-     */
+
     public StackPane getView() {
         return rootPane;
     }
 
-    // Если выбрана роль ADMIN, показываем поле «admin code»
-    // иначе скрываем
     private void onRoleChanged() {
         if (roleCombo.getValue() == Role.ADMIN) {
             adminCodeLabel.setVisible(true);
@@ -114,15 +97,14 @@ public class RegistrationController {
         Role chosenRole = roleCombo.getValue();
 
         if (login.isEmpty() || pass.isEmpty()) {
-            messageLabel.setText("Логин/пароль не могут быть пустыми!");
+            messageLabel.setText("Login/password fields cannot be empty!");
             return;
         }
 
-        // Проверка «admin code»
         if (chosenRole == Role.ADMIN) {
             String code = adminCodeField.getText().trim();
             if (!"132435".equals(code)) {
-                messageLabel.setText("Неверный код администратора!");
+                messageLabel.setText("Incorrect admin code!");
                 return;
             }
         }
@@ -130,16 +112,15 @@ public class RegistrationController {
         try {
             User newUser = MainApp.getUserService().register(login, pass, chosenRole);
             messageLabel.setStyle("-fx-text-fill: green;");
-            messageLabel.setText("Пользователь " + newUser.getLogin()
-                    + " зарегистрирован как " + newUser.getRole() + "!");
+            messageLabel.setText("User " + newUser.getLogin()
+                    + " was registered as " + newUser.getRole() + "!");
         } catch (Exception ex) {
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("Ошибка: " + ex.getMessage());
+            messageLabel.setText("Error: " + ex.getMessage());
         }
     }
 
     private void goBack() {
-        // Возврат на экран логина
         LoginController loginController = new LoginController();
         rootPane.getScene().setRoot(loginController.getView());
     }
