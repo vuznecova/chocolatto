@@ -1,4 +1,4 @@
-Pupa;2025-01-18T12:12:36.9957827;IN_PROGRESS;fffffff, ffds, sdsds, 12331;1) White chocolate (3.0 $)
-2) Oreo chocolate (4.0 $)
-3) Lindt Dark chocolate (5.0 $)
-Итого: 12.0 $
+user1;2025-01-19T20:15:14.3816285;COMPLETED;123 Street;Item1
+user2;2025-01-19T20:15:14.3827239;COMPLETED;456 Avenue;Item2
+user1;2025-01-19T20:15:14.4047543;NEW;123 Street;Item1
+user1;2025-01-19T20:15:14.4067871;NEW;123 Street;Item1
