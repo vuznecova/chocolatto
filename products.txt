@@ -1,3 +1,8 @@
-Chocolate;10.0;/images/choco.png
-Candy;5.0;/images/candy.png
-Chocolate;10.5;/images/choco.png
+Milk chocolate;5.0;/images/Milk.png
+Dark chocolate;6.0;/images/dark_choko.png
+Cake;13.0;/images/Cupcake.png
+Kinder Bueno;4.0;/images/bueno.png
+Muffin;2.0;/images/Maffin.png
+White chocolate;3.0;/images/White.png
+Oreo chocolate;4.0;/images/Oreo.png
+Lindt Dark chocolate;5.0;/images/Lindt.png

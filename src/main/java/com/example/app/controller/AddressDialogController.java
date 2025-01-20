@@ -24,25 +24,25 @@ public class AddressDialogController {
         dialogStage = new Stage();
         dialogStage.initModality(Modality.WINDOW_MODAL);
         dialogStage.initOwner(parentStage);
-        dialogStage.setTitle("Введите адрес доставки");
+        dialogStage.setTitle("Enter delivery address");
 
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
 
-        Label label1 = new Label("Страна:");
+        Label label1 = new Label("Country:");
         countryField = new TextField();
 
-        Label label2 = new Label("Город:");
+        Label label2 = new Label("City:");
         cityField = new TextField();
 
-        Label label3 = new Label("Улица:");
+        Label label3 = new Label("Street:");
         streetField = new TextField();
 
-        Label label4 = new Label("Дом/Кв:");
+        Label label4 = new Label("Apt/House number:");
         houseField = new TextField();
 
         Button okBtn = new Button("OK");
-        Button cancelBtn = new Button("Отмена");
+        Button cancelBtn = new Button("Cancel");
 
         okBtn.setOnAction(e -> onOk());
         cancelBtn.setOnAction(e -> onCancel());
@@ -71,7 +71,7 @@ public class AddressDialogController {
 
         if (country.isEmpty() || city.isEmpty()
                 || street.isEmpty() || house.isEmpty()) {
-            new Alert(Alert.AlertType.WARNING, "Пожалуйста, заполните все поля!")
+            new Alert(Alert.AlertType.WARNING, "Please fill in all fields!")
                     .showAndWait();
             return;
         }
